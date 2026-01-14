@@ -1,55 +1,3 @@
-// using UnityEngine;
-
-// [CreateAssetMenu(fileName = "LevelPattern", menuName = "Grid/Level Pattern", order = 1)]
-// public class LevelPattern : ScriptableObject
-// {
-//     public int width = 10;
-//     public int height = 10;
-
-//     // Предопределённые цвета для каждого типа блока (можно расширять)
-//     [Header("Available Colors")]
-//     public GameObject redPrefab;
-//     public GameObject yellowPrefab;
-//     public GameObject bluePrefab;
-//     public GameObject greenPrefab;
-//     // ... другие префабы
-
-//     // Сам паттерн: 2D-массив индексов префабов (0 = red, 1 = yellow и т.д.)
-//     [SerializeField] private int[] pattern; // размер = width * height
-
-//     public GameObject GetPrefab(int x, int y)
-//     {
-//         if (pattern == null || pattern.Length != width * height)
-//             return null;
-
-//         int index = y * width + x; // row-major order (y сверху вниз)
-//         int type = pattern[index];
-
-//         return type switch
-//         {
-//             0 => redPrefab,
-//             1 => yellowPrefab,
-//             2 => bluePrefab,
-//             3 => greenPrefab,
-//             //_ => null
-//         };
-//     }
-
-//     public BlockColor GetColorType(int x, int y)
-//     {
-//         // Аналогично, но возвращаем enum
-//         int type = pattern[y * width + x];
-//         return type switch
-//         {
-//             0 => BlockColor.Red,
-//             1 => BlockColor.Yellow,
-//             2 => BlockColor.Blue,
-//             3 => BlockColor.Green,
-//             //_ => BlockColor.None // или default
-//         };
-//     }
-// }
-
 using UnityEngine;
 [CreateAssetMenu(fileName = "LevelPattern", menuName = "Grid/Level Pattern")]
 public class LevelPattern : ScriptableObject
@@ -105,11 +53,6 @@ public class LevelPattern : ScriptableObject
     int index = y * width + x;
 
     int[] targetLayer = (layer == 0) ? baseLayer : secondLayer;
-
-    // if (targetLayer == null || index >= targetLayer.Length)
-    // {
-    //     return BlockColor.None; // или default, например BlockColor.None
-    // }
 
     int type = targetLayer[index];
 

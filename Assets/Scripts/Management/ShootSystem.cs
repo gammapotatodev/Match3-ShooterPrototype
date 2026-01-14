@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ShootSystem : MonoBehaviour
@@ -27,40 +26,6 @@ public class ShootSystem : MonoBehaviour
 
         StartCoroutine(ShootingLoop());
     }
-
-    // private IEnumerator ShootingLoop()
-    // {
-    //     while (waitingForTarget && bulletsLeft > 0)
-    //     {
-    //         // ⛔ если сетка занята — ждём
-    //         if (gridSystem.IsBusy)
-    //         {
-    //             yield return null;
-    //             continue;
-    //         }
-
-    //         if (scanX >= gridSystem.width)
-    //         {
-    //             scanX = 0;
-    //             yield return null;
-    //             continue;
-    //         }
-
-    //         var cell = gridSystem.gridCells[scanX][0];
-
-    //         if (cell != null &&
-    //             cell.GetComponent<BlockProperties>().colorType == currentColor)
-    //         {
-    //             yield return StartCoroutine(RemoveSingle(cell));
-    //         }
-
-    //         scanX++;
-    //         yield return null;
-    //     }
-
-    //     waitingForTarget = false;
-    //     onShootComplete?.Invoke(true);
-    // }
 
     private IEnumerator ShootingLoop()
     {
@@ -113,7 +78,7 @@ public class ShootSystem : MonoBehaviour
 
         gridSystem.Lock();
 
-        // 1️⃣ Создаём сферу и отправляем к цели
+        // Создаём сферу и отправляем к цели
         GameObject orbObj = Instantiate(
             whiteOrbPrefab,
             projectileMuzzle.position,
@@ -125,10 +90,10 @@ public class ShootSystem : MonoBehaviour
         bool arrived = false;
         orb.Init(targetBlock.transform, () => arrived = true);
 
-        // 2️⃣ Ждём, пока сфера долетит
+        // Ждём, пока сфера долетит
         yield return new WaitUntil(() => arrived);
 
-        // 3️⃣ Находим и удаляем блок из стека
+        // Находим и удаляем блок из стека
         bool blockRemoved = false;
 
         for (int x = 0; x < gridSystem.width; x++)
@@ -164,11 +129,11 @@ public class ShootSystem : MonoBehaviour
             if (blockRemoved) break;
         }
 
-        // 4️⃣ Обновляем UI и счётчик
+        // Обновляем UI и счётчик
         bulletsLeft--;
         onBulletUsed?.Invoke(bulletsLeft);
 
-        // 5️⃣ Сдвигаем все столбцы и запускаем анимацию
+        // Сдвигаем все столбцы и запускаем анимацию
         if (blockRemoved)
         {
             // Сдвигаем все столбцы (можно оптимизировать, если знаешь только один столбец)
@@ -182,22 +147,6 @@ public class ShootSystem : MonoBehaviour
 
         gridSystem.Unlock();
     }
-
-    // private void RemoveFromGrid(GameObject target)
-    // {
-    //     for (int x = 0; x < gridSystem.width; x++)
-    //     {
-    //         for (int y = 0; y < gridSystem.height; y++)
-    //         {
-    //             if (gridSystem.gridCells[x][y] == target)
-    //             {
-    //                 gridSystem.gridCells[x][y] = null;
-    //                 return;
-    //             }
-    //         }   
-    //     }
-    // }
-
     private void RemoveFromGrid(GameObject target)
     {
         gridSystem.TryRemoveBlock(target);

@@ -12,15 +12,7 @@ public class GridSystem : MonoBehaviour
     [SerializeField] private Vector3 gridOrigin = Vector3.zero;
 
     [Header("Level Configuration")]
-    [SerializeField] private LevelPattern levelPattern; // перетаскиваем в инспекторе
-
-    // [Header("Prefabs")]
-    // [SerializeField] private GameObject redPrefab;
-    // [SerializeField] private GameObject yellowPrefab;
-    // private int width;
-    // private int height;
-
-    //public List<List<GameObject>> gridCells = new();
+    [SerializeField] private LevelPattern levelPattern;
     public List<List<BlockStack>> gridCells = new List<List<BlockStack>>();
     public bool IsBusy { get; private set; }
 
@@ -43,59 +35,6 @@ public class GridSystem : MonoBehaviour
         GenerateGrid();
     }
 
-    // private void GenerateGrid()
-    // {
-    //     // gridCells.Clear();
-
-    //     // for (int x = 0; x < width; x++)
-    //     // {
-    //     //     gridCells.Add(new List<GameObject>());
-
-    //     //     for (int y = 0; y < height; y++)
-    //     //     {
-    //     //         Vector3 pos = gridOrigin + new Vector3(x * cellSize, y * cellSize, 0);
-    //     //         GameObject prefab = x < width / 2 ? yellowPrefab : redPrefab;
-
-    //     //         GameObject cube = Instantiate(prefab, pos, Quaternion.identity, transform);
-    //     //         cube.GetComponent<BlockProperties>().colorType =
-    //     //             prefab == redPrefab ? BlockColor.Red : BlockColor.Yellow;
-
-    //     //         gridCells[x].Add(cube);
-    //     //     }
-    //     // }
-    //     gridCells.Clear();
-
-    // // Можно переопределить размеры из паттерна
-    //     if (levelPattern != null)
-    //     {
-    //         width = levelPattern.width;
-    //         height = levelPattern.height;
-    //     }
-
-    //     for (int x = 0; x < width; x++) //int x = 0; x < width; x++
-    //     {
-    //         gridCells.Add(new List<GameObject>());
-
-    //         for (int y = 0; y < height; y++) //int y = 0; y < height; y++
-    //         {
-    //             Vector3 pos = gridOrigin + new Vector3(x * cellSize, y * cellSize, 0);
-
-    //             GameObject prefab = levelPattern?.GetPrefab(x, y);
-
-    //             if (prefab == null)
-    //             {
-    //                 // Можно оставить пустую клетку или поставить дефолтный блок
-    //                 gridCells[x].Add(null);
-    //                 continue;
-    //             }
-
-    //             GameObject cube = Instantiate(prefab, pos, Quaternion.identity, transform);
-    //             cube.GetComponent<BlockProperties>().colorType = levelPattern.GetColorType(x, y);
-
-    //             gridCells[x].Add(cube);
-    //         }
-    //     }
-    // }
     private void GenerateGrid()
     {
         gridCells.Clear();
@@ -128,7 +67,7 @@ public class GridSystem : MonoBehaviour
                 {
                     // Сдвигаем по Z ближе к камере (меньше Z = ближе)
                     // Чем больше Z-координата — тем дальше объект от камеры
-                    Vector3 topPos = basePos + Vector3.forward * 1f;  // ← ПОЗИТИВНЫЙ сдвиг!
+                    Vector3 topPos = basePos + Vector3.forward * 1f;  // ПОЗИТИВНЫЙ сдвиг
 
                     stack.topBlock = Instantiate(topPrefab, topPos, Quaternion.identity, transform);
                     var props = stack.topBlock.GetComponent<BlockProperties>();
@@ -163,27 +102,6 @@ public class GridSystem : MonoBehaviour
         return removed;
     }
 
-
-    // // ЛОГИЧЕСКИЙ сдвиг без анимации
-    // public void ShiftColumnInstant(int column)
-    // {
-    //     var col = gridCells[column];
-    //     int writeY = 0;
-
-    //     for (int readY = 0; readY < height; readY++)
-    //     {
-    //         if (col[readY] != null)
-    //         {
-    //             if (readY != writeY)
-    //             {
-    //                 col[writeY] = col[readY];
-    //                 col[readY] = null;
-    //             }
-    //             writeY++;
-    //         }
-    //     }
-    //     OnGridChanged?.Invoke();
-    // }
     public void ShiftColumnInstant(int column)
     {
         var col = gridCells[column];
@@ -213,48 +131,6 @@ public class GridSystem : MonoBehaviour
 
         OnGridChanged?.Invoke();
     }
-
-    // // ОДНОВРЕМЕННАЯ анимация всех кубов
-    // public IEnumerator AnimateAllCubes(float duration = 0.15f)
-    // {
-    //     float t = 0f;
-
-    //     Dictionary<GameObject, Vector3> start = new();
-    //     Dictionary<GameObject, Vector3> target = new();
-
-    //     for (int x = 0; x < width; x++)
-    //     for (int y = 0; y < height; y++)
-    //     {
-    //         var cube = gridCells[x][y];
-    //         if (!cube) continue; // ВАЖНО: Unity null-check
-
-    //         start[cube] = cube.transform.position;
-    //         target[cube] = gridOrigin + new Vector3(x * cellSize, y * cellSize, 0);
-    //     }
-
-    //     while (t < 1f)
-    //     {
-    //         t += Time.deltaTime / duration;
-    //         float ease = Mathf.SmoothStep(0, 1, t);
-
-    //         foreach (var kv in start)
-    //         {
-    //             if (!kv.Key) continue; // <-- защита от Destroy
-                
-    //             kv.Key.transform.position =
-    //                 Vector3.Lerp(kv.Value, target[kv.Key], ease);
-    //         }
-    //         yield return null;
-    //     }
-
-    //     foreach (var kv in target)
-    //     {
-    //         if (!kv.Key) continue;
-    //         kv.Key.transform.position = kv.Value;
-    //     }
-
-    //     OnAllColumnsShiftedComplete?.Invoke();
-    // }
 
     public IEnumerator AnimateAllCubes(float duration = 0.15f)
     {
@@ -296,7 +172,6 @@ public class GridSystem : MonoBehaviour
             yield return null;
         }
 
-        // Финальная точная установка
         foreach (var block in startPositions.Keys)
         {
             if (block == null) continue;
@@ -305,22 +180,6 @@ public class GridSystem : MonoBehaviour
 
         OnAllColumnsShiftedComplete?.Invoke();
     }
-
-    // public int GetRemainingBlocksCount()
-    // {
-    //     int count = 0;
-
-    //     for (int x = 0; x < width; x++)
-    //     {
-    //         for (int y = 0; y < height; y++)
-    //         {
-    //             if (gridCells[x][y] != null)
-    //                 count++;
-    //         }
-    //     }
-
-    //     return count;
-    // }
 
     public int GetRemainingBlocksCount()
     {
@@ -348,7 +207,7 @@ public class GridSystem : MonoBehaviour
 
                 if (stack.topBlock == block)
                 {
-                    Destroy(stack.topBlock);          // ← так
+                    Destroy(stack.topBlock);
                     stack.topBlock = null;
                     OnGridChanged?.Invoke();
                     return true;
@@ -361,7 +220,7 @@ public class GridSystem : MonoBehaviour
                         Destroy(stack.topBlock);
                         stack.topBlock = null;
                     }
-                    Destroy(stack.baseBlock);         // ← так
+                    Destroy(stack.baseBlock);
                     stack.baseBlock = null;
                     OnGridChanged?.Invoke();
                     return true;

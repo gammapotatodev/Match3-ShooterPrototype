@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,25 +24,13 @@ public class ProgressBarSystem : MonoBehaviour
 
     private void Start()
     {
-        //totalBlocks = gridSystem.width * gridSystem.height;
         if (gridSystem != null)
     {
         totalBlocks = gridSystem.width * gridSystem.height;
         gridSystem.OnAllColumnsShiftedComplete += OnGridUpdated;
     }
-        //StartCoroutine(InitializeDelayed());
         UpdateProgressImmediate();
-
-        // Подписываемся ОДИН раз
-        //gridSystem.OnAllColumnsShiftedComplete += OnGridUpdated;
     }
-    // private IEnumerator InitializeDelayed()
-    // {
-    //     yield return null; // один кадр — GridSystem уже сгенерировал сетку
-
-    //     totalBlocks = gridSystem.GetRemainingBlocksCount();
-    //     UpdateProgressImmediate();
-    // }
 
     private void OnGridUpdated()
     {

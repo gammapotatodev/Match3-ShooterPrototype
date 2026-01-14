@@ -54,7 +54,7 @@ public class ShootingSlotSystem : MonoBehaviour
 
         int totalShots = p1.ShootCount + p2.ShootCount + p3.ShootCount;
 
-        // ❌ уничтожаем старые
+        // уничтожаем старые
         Destroy(p2.gameObject);
         Destroy(p3.gameObject);
         ClearSlot(b);

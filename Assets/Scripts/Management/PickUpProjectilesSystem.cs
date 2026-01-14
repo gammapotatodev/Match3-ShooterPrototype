@@ -37,20 +37,6 @@ public class PickUpProjectilesSystem : MonoBehaviour,
     public void OnPointerDown(PointerEventData eventData)
     {
 
-        // for (int i = 0; i < shootingSlotSystem.slots.Length; i++)
-        // {
-        //     if (shootingSlotSystem.isFull[i] == false)
-        //     {
-        //         index = i;
-        //         shootingSlotSystem.isFull[index] = true;
-        //         transform.position = shootingSlotSystem.slots[i].transform.position;
-        //         shootSystem.onBulletUsed += UpdateCountText;
-        //         shootSystem.onShootComplete += OnShootFinished;
-        //         shootSystem.Shoot(shootCount, projectileColor);
-        //         break;
-        //     }
-        // }
-
         for (int i = 0; i < shootingSlotSystem.slots.Length; i++)
         {
             if (!shootingSlotSystem.isFull[i])
@@ -66,9 +52,9 @@ public class PickUpProjectilesSystem : MonoBehaviour,
 
                 shootSystem.Shoot(shootCount, projectileColor);
 
-                // 🔥 Проверяем комбинации
+                // Проверяем комбинации
                 shootingSlotSystem.CheckTripleMatch();
-                        // ✅ ПРОВЕРКА НА ПРОИГРЫШ
+                        // ПРОВЕРКА НА ПРОИГРЫШ
                 if (shootingSlotSystem.AreAllSlotsFull())
                 {
                     GameManager gm = Object.FindAnyObjectByType<GameManager>();
@@ -80,8 +66,6 @@ public class PickUpProjectilesSystem : MonoBehaviour,
                 break;
             }
         }
-        // shootSystem.onShootComplete += OnShootFinished;
-        // shootSystem.Shoot(shootCount, projectileColor);
     }
 
     private void OnShootFinished(bool success)
@@ -92,7 +76,6 @@ public class PickUpProjectilesSystem : MonoBehaviour,
         {
             shootingSlotSystem.ClearSlot(index);
             Destroy(gameObject);
-            //shootingSlotSystem.isFull[index] = false;
         }
     }
 

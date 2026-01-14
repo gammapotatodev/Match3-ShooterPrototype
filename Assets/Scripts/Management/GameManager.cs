@@ -48,8 +48,6 @@ public class GameManager : MonoBehaviour
         else
         {
             Debug.LogWarning("Панель завершения уровня не назначена!");
-            // Можно сразу загрузить следующую сцену, если UI нет
-            //LoadNextLevel();
         }
     }
 
@@ -75,32 +73,6 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
-    // private void Update()
-    // {
-    //     // Находим все существующие снаряды
-    //     PickUpProjectilesSystem[] existing = 
-    //         Object.FindObjectsByType<PickUpProjectilesSystem>(FindObjectsSortMode.None);
-
-    //     // Для каждого типа снаряда проверяем, есть ли он на сцене
-    //     for (int prefabIndex = 0; prefabIndex < projectilePrefabs.Count; prefabIndex++)
-    //     {
-    //         //Есть ли на сцене хотя бы один экземпляр этого типа?
-    //         bool hasThisType = false;
-    //         foreach (var pickup in existing)
-    //         {
-    //             if (pickup.gameObject.name.StartsWith(projectilePrefabs[prefabIndex].name))
-    //             {
-    //                 hasThisType = true;
-    //                 break;
-    //             }
-    //         }
-
-    //         if (!hasThisType && prefabIndex < spawnPositions.Count)
-    //         {
-    //             SpawnProjectileOfType(prefabIndex);
-    //         }
-    //     }
-    // }
 
     private void Update()
     {
@@ -149,13 +121,12 @@ public class GameManager : MonoBehaviour
 
         if (newProj.TryGetComponent<PickUpProjectilesSystem>(out var pickupSystem))
         {
-            pickupSystem.shootCount = shootCount; // ← используем поле shootCount из GameManager
+            pickupSystem.shootCount = shootCount; // используем поле shootCount из GameManager
         }
 
         if (newProj.TryGetComponent<ShootSystem>(out var shootSystem))
         {
             shootSystem.gridSystem = gridSystem;
-            // shootSystem.Init(gridSystem);
         }
         else
         {
